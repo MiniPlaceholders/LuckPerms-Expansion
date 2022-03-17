@@ -13,7 +13,7 @@ bukkit {
     main = "me.dreamerzero.example.paper.PaperPlugin"
     apiVersion = "1.18"
     authors = listOf("4drian3d")
-    depend = listOf("MiniPlaceholders")
+    depend = listOf("MiniPlaceholders", "LuckPerms")
     version = pluginVersion as String
 }
 

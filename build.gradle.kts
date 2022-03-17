@@ -26,6 +26,7 @@ subprojects {
 	
 	dependencies {
 		compileOnly("com.github.4drian3d:MiniPlaceholders:1.0.0")
+        compileOnly("net.luckperms:api:5.4")
 	}
 }
 
