@@ -62,57 +62,57 @@ public final class VelocityPlugin {
         Expansion.builder("example")
             .filter(Player.class)
             .audiencePlaceholder("prefix", (aud, queue, ctx) -> Tag.inserting(LegacyUtils.parsePossibleLegacy(adapter.getMetaData((Player)aud).getPrefix())))
-			.audiencePlaceholder("suffix", (aud, queue, ctx) -> 
-				Tag.inserting(LegacyUtils.parsePossibleLegacy(adapter.getMetaData((Player)aud).getSuffix())))
-			.audiencePlaceholder("has_permission", (aud, queue, ctx) -> {
-				User user = adapter.getUser((Player)aud);
-				String permission = queue.popOr(() -> "you need to introduce an permission").value();
-				Tristate result = user.getCachedData().getPermissionData().checkPermission(permission);
-				return Tag.selfClosingInserting(result.asBoolean() 
-					? TRUE_COMPONENT
-					: FALSE_COMPONENT
-				);
-			})
-			.audiencePlaceholder("check_permission", (aud, queue, ctx) -> {
-				User user = adapter.getUser((Player)aud);
-				String permission = queue.popOr(() -> "you need to introduce an permission").value();
-				Tristate result = user.getCachedData().getPermissionData().checkPermission(permission);
+            .audiencePlaceholder("suffix", (aud, queue, ctx) -> 
+                Tag.inserting(LegacyUtils.parsePossibleLegacy(adapter.getMetaData((Player)aud).getSuffix())))
+            .audiencePlaceholder("has_permission", (aud, queue, ctx) -> {
+                User user = adapter.getUser((Player)aud);
+                String permission = queue.popOr(() -> "you need to introduce an permission").value();
+                Tristate result = user.getCachedData().getPermissionData().checkPermission(permission);
+                return Tag.selfClosingInserting(result.asBoolean() 
+                    ? TRUE_COMPONENT
+                    : FALSE_COMPONENT
+                );
+            })
+            .audiencePlaceholder("check_permission", (aud, queue, ctx) -> {
+                User user = adapter.getUser((Player)aud);
+                String permission = queue.popOr(() -> "you need to introduce an permission").value();
+                Tristate result = user.getCachedData().getPermissionData().checkPermission(permission);
 				
-				return Tag.selfClosingInserting(switch(result) {
-					case TRUE -> TRUE_COMPONENT;
-					case FALSE -> FALSE_COMPONENT;
-					case UNDEFINED -> UNDEFINED_COMPONENT;
-				});
-			})
-			.audiencePlaceholder("inherited_groups", (aud, queue, ctx) -> {
-				User user = adapter.getUser((Player)aud);
-				String groups = user.getInheritedGroups(user.getQueryOptions()).stream()
-					.map(Group::getDisplayName)
-					.collect(Collectors.joining(" "));
-				return Tag.selfClosingInserting(LegacyUtils.parsePossibleLegacy(groups));	
-			})
-			.audiencePlaceholder("in_group", (aud, queue, ctx) -> {
-				User user = adapter.getUser((Player)aud);
-				String groupName = queue.popOr(() -> "you need to provide an group name").value();
-				Group group = luckPerms.getGroupManager().getGroup(groupName);
-				
-				if(group != null) return Tag.selfClosingInserting(FALSE_COMPONENT);
-				
-				return Tag.selfClosingInserting(user.getInheritedGroups(user.getQueryOptions()).contains(group)
-					? TRUE_COMPONENT
-					: FALSE_COMPONENT
-				);
-			})
-			.audiencePlaceholder("primary_group_name", (aud, queue, ctx) ->
+                return Tag.selfClosingInserting(switch(result) {
+                    case TRUE -> TRUE_COMPONENT;
+                    case FALSE -> FALSE_COMPONENT;
+                    case UNDEFINED -> UNDEFINED_COMPONENT;
+                });
+            })
+            .audiencePlaceholder("inherited_groups", (aud, queue, ctx) -> {
+                User user = adapter.getUser((Player)aud);
+                String groups = user.getInheritedGroups(user.getQueryOptions()).stream()
+                    .map(Group::getDisplayName)
+                    .collect(Collectors.joining(" "));
+                return Tag.selfClosingInserting(LegacyUtils.parsePossibleLegacy(groups));	
+            })
+            .audiencePlaceholder("in_group", (aud, queue, ctx) -> {
+                User user = adapter.getUser((Player)aud);
+                String groupName = queue.popOr(() -> "you need to provide an group name").value();
+                Group group = luckPerms.getGroupManager().getGroup(groupName);
+
+                if(group != null) return Tag.selfClosingInserting(FALSE_COMPONENT);
+
+                return Tag.selfClosingInserting(user.getInheritedGroups(user.getQueryOptions()).contains(group)
+                    ? TRUE_COMPONENT
+                    : FALSE_COMPONENT
+                );
+            })
+            .audiencePlaceholder("primary_group_name", (aud, queue, ctx) ->
                 Tag.selfClosingInserting(Component.text(adapter.getUser((Player)aud).getCachedData().getMetaData().getPrimaryGroup())))
-			.audiencePlaceholder("inherits_group", (aud, queue, ctx) -> {
-				User user = adapter.getUser((Player)aud);
-				Group group = luckPerms.getGroupManager().getGroup(queue.popOr(() -> "you need to provide a group").value());
-				return Tag.selfClosingInserting(group != null && user.getInheritedGroups(user.getQueryOptions()).contains(group)
-					? TRUE_COMPONENT
-					: FALSE_COMPONENT
-				);
-			})
+            .audiencePlaceholder("inherits_group", (aud, queue, ctx) -> {
+                User user = adapter.getUser((Player)aud);
+                Group group = luckPerms.getGroupManager().getGroup(queue.popOr(() -> "you need to provide a group").value());
+                return Tag.selfClosingInserting(group != null && user.getInheritedGroups(user.getQueryOptions()).contains(group)
+                    ? TRUE_COMPONENT
+                    : FALSE_COMPONENT
+                );
+            })
             .build()
             .register();
     }
