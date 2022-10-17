@@ -1,4 +1,4 @@
-package me.dreamerzero.example.velocity;
+package me.dreamerzero.luckpermsexpansion.velocity;
 
 import java.util.stream.Collectors;
 
@@ -24,8 +24,8 @@ import net.luckperms.api.platform.PlayerAdapter;
 import net.luckperms.api.util.Tristate;
 
 @Plugin(
-    name = "Example-Expansion",
-    id = "exampleexpansion",
+    name = "LuckPerms-Expansion",
+    id = "luckpermsexpansion",
     version = "1.0.0",
     authors = {"4drian3d"},
     dependencies = {
@@ -59,7 +59,7 @@ public final class VelocityPlugin {
 
         PlayerAdapter<Player> adapter = luckPerms.getPlayerAdapter(Player.class);
 		
-        Expansion.builder("example")
+        Expansion.builder("luckperms")
             .filter(Player.class)
             .audiencePlaceholder("prefix", (aud, queue, ctx) -> Tag.inserting(LegacyUtils.parsePossibleLegacy(adapter.getMetaData((Player)aud).getPrefix())))
             .audiencePlaceholder("suffix", (aud, queue, ctx) -> 
@@ -90,18 +90,6 @@ public final class VelocityPlugin {
                     .map(Group::getDisplayName)
                     .collect(Collectors.joining(" "));
                 return Tag.selfClosingInserting(LegacyUtils.parsePossibleLegacy(groups));	
-            })
-            .audiencePlaceholder("in_group", (aud, queue, ctx) -> {
-                User user = adapter.getUser((Player)aud);
-                String groupName = queue.popOr(() -> "you need to provide an group name").value();
-                Group group = luckPerms.getGroupManager().getGroup(groupName);
-
-                if(group != null) return Tag.selfClosingInserting(FALSE_COMPONENT);
-
-                return Tag.selfClosingInserting(user.getInheritedGroups(user.getQueryOptions()).contains(group)
-                    ? TRUE_COMPONENT
-                    : FALSE_COMPONENT
-                );
             })
             .audiencePlaceholder("primary_group_name", (aud, queue, ctx) ->
                 Tag.selfClosingInserting(Component.text(adapter.getUser((Player)aud).getCachedData().getMetaData().getPrimaryGroup())))

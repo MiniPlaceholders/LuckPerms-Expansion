@@ -1,4 +1,4 @@
-package me.dreamerzero.example.paper;
+package me.dreamerzero.luckpermsexpansion.paper;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -67,18 +67,6 @@ public final class PaperPlugin extends JavaPlugin {
 					.map(group -> LegacyUtils.parsePossibleLegacy(group.getDisplayName()))
 					.collect(ComponentCollector.spacing());
 				return Tag.selfClosingInserting(groups);	
-			})
-			.audiencePlaceholder("in_group", (aud, queue, ctx) -> {
-				User user = adapter.getUser((Player)aud);
-				String groupName = queue.popOr(() -> "you need to provide an group name").value();
-				Group group = luckPerms.getGroupManager().getGroup(groupName);
-				
-				if(group != null) return Tag.selfClosingInserting(FALSE_COMPONENT);
-				
-				return Tag.selfClosingInserting(user.getInheritedGroups(user.getQueryOptions()).contains(group)
-					? TRUE_COMPONENT
-					: FALSE_COMPONENT
-				);
 			})
 			.audiencePlaceholder("primary_group_name", (aud, queue, ctx) ->
 				Tag.selfClosingInserting(Component.text(adapter.getUser((Player)aud).getCachedData().getMetaData().getPrimaryGroup())))
