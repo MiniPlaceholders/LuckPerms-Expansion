@@ -1,7 +1,7 @@
-rootProject.name = "example-parent"
+rootProject.name = "luckpermsexpansion-parent"
 
-include("example-paper")
-include("example-velocity")
+include("luckpermsexpansion-paper")
+include("luckpermsexpansion-velocity")
 
-project(":example-velocity").projectDir = file("velocity")
-project(":example-paper").projectDir = file("paper")
+project(":luckpermsexpansion-velocity").projectDir = file("velocity")
+project(":luckpermsexpansion-paper").projectDir = file("paper")

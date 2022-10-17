@@ -1,4 +1,4 @@
-package me.dreamerzero.example.paper;
+package me.dreamerzero.luckpermsexpansion.paper;
 
 import java.util.Set;
 import java.util.function.BiConsumer;
