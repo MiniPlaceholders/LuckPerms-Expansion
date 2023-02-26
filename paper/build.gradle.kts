@@ -1,6 +1,6 @@
 plugins {
     id("net.minecrell.plugin-yml.bukkit") version "0.5.1"
-    id("xyz.jpenilla.run-paper") version "1.0.6"
+    id("xyz.jpenilla.run-paper") version "1.1.0"
 }
 
 dependencies {
