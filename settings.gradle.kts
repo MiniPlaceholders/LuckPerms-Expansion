@@ -1,7 +1,6 @@
-rootProject.name = "luckpermsexpansion-parent"
+rootProject.name = "Luckperms-Expansion"
 
-include("luckpermsexpansion-paper")
-include("luckpermsexpansion-velocity")
-
-project(":luckpermsexpansion-velocity").projectDir = file("velocity")
-project(":luckpermsexpansion-paper").projectDir = file("paper")
+arrayOf("paper", "velocity").forEach {
+    include("luckperms-expansion-$it")
+    project(":luckperms-expansion-$it").projectDir = file(it)
+}

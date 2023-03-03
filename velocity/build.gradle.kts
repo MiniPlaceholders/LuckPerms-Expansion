@@ -1,6 +1,6 @@
 dependencies {
-    compileOnly("com.velocitypowered:velocity-api:3.1.2-SNAPSHOT")
-    annotationProcessor("com.velocitypowered:velocity-api:3.1.2-SNAPSHOT")
+    compileOnly(libs.velocity.api)
+    annotationProcessor(libs.velocity.api)
+    compileOnly(libs.miniplaceholders)
+    compileOnly(libs.luckperms)
 }
-
-java.toolchain.languageVersion.set(JavaLanguageVersion.of(17))

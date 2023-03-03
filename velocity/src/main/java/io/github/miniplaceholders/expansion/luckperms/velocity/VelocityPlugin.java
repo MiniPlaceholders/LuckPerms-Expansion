@@ -1,18 +1,13 @@
-package me.dreamerzero.luckpermsexpansion.velocity;
-
-import java.util.stream.Collectors;
+package io.github.miniplaceholders.expansion.luckperms.velocity;
 
 import com.google.inject.Inject;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
-import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.Dependency;
+import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.proxy.Player;
-
-import org.slf4j.Logger;
-
-import me.dreamerzero.miniplaceholders.api.Expansion;
-import me.dreamerzero.miniplaceholders.api.utils.LegacyUtils;
+import io.github.miniplaceholders.api.Expansion;
+import io.github.miniplaceholders.api.utils.LegacyUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.minimessage.tag.Tag;
@@ -22,21 +17,18 @@ import net.luckperms.api.model.group.Group;
 import net.luckperms.api.model.user.User;
 import net.luckperms.api.platform.PlayerAdapter;
 import net.luckperms.api.util.Tristate;
+import org.slf4j.Logger;
+
+import java.util.stream.Collectors;
 
 @Plugin(
     name = "LuckPerms-Expansion",
-    id = "luckpermsexpansion",
+    id = "luckperms-expansion",
     version = "1.0.0",
     authors = {"4drian3d"},
     dependencies = {
-        @Dependency(
-            id = "miniplaceholders",
-            optional = false
-        ),
-        @Dependency(
-            id = "luckperms",
-            optional = false
-        )
+        @Dependency(id = "miniplaceholders"),
+        @Dependency(id = "luckperms")
     }
         
 )

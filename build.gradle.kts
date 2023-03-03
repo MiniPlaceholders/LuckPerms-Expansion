@@ -1,40 +1,33 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-
 plugins {
     java
-    id("com.github.johnrengelman.shadow") version "8.1.0"
-}
-
-allprojects {
-    apply(plugin = "java")
-    group = "me.dreamerzero.luckpermsexpansion"
-    version = "1.0.0"
-    description = "LuckPerms-Expansion"
+    alias(libs.plugins.shadow)
 }
 
 dependencies {
-    shadow(project(":luckpermsexpansion-velocity"))
-    shadow(project(":luckpermsexpansion-paper"))
+    implementation(project(":luckperms-expansion-velocity"))
+    implementation(project(":luckperms-expansion-paper"))
 }
 
 subprojects {
+    apply<JavaPlugin>()
     repositories {
-        mavenCentral()
-        maven("https://jitpack.io")
-        maven("https://papermc.io/repo/repository/maven-public/")
+        maven("https://repo.papermc.io/repository/maven-public/")
     }
 
-    dependencies {
-        compileOnly("com.github.4drian3d:MiniPlaceholders:1.3.1")
-        compileOnly("net.luckperms:api:5.4")
+    java.toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+
+    tasks {
+        compileJava {
+            options.encoding = Charsets.UTF_8.name()
+            options.release.set(17)
+        }
     }
 }
 
 tasks {
     shadowJar {
-        archiveFileName.set("LuckPerms-Expansion.jar")
+        archiveFileName.set("LuckPerms-Expansion-${project.version}.jar")
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-        configurations = listOf(project.configurations.shadow.get())
     }
     build {
         dependsOn(shadowJar)

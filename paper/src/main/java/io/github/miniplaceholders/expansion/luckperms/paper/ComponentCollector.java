@@ -1,4 +1,4 @@
-package me.dreamerzero.luckpermsexpansion.paper;
+package io.github.miniplaceholders.expansion.luckperms.paper;
 
 import java.util.Set;
 import java.util.function.BiConsumer;
