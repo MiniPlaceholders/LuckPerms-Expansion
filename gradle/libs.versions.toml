@@ -10,7 +10,7 @@ shadow = "8.1.1"
 runtask = "2.1.0"
 pluginyml = "0.5.3"
 
-miniplaceholders = "2.0.0"
+miniplaceholders = "2.1.0"
 luckperms = "5.4"
 
 [libraries]
