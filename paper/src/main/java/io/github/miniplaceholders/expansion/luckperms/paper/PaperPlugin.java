@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
+@SuppressWarnings("unused")
 public final class PaperPlugin extends JavaPlugin {
 	private static final Component FALSE_COMPONENT = Component.text(false, NamedTextColor.RED);
 	private static final Component TRUE_COMPONENT = Component.text(true, NamedTextColor.GREEN);
@@ -64,11 +65,16 @@ public final class PaperPlugin extends JavaPlugin {
 				User user = adapter.getUser((Player)aud);
 				Component groups = user.getInheritedGroups(user.getQueryOptions()).stream()
 					.map(group -> LegacyUtils.parsePossibleLegacy(group.getDisplayName()))
-					.collect(ComponentCollector.spacing());
+					.collect(Component.toComponent(Component.space()));
 				return Tag.selfClosingInserting(groups);	
 			})
-			.audiencePlaceholder("primary_group_name", (aud, queue, ctx) ->
-				Tag.selfClosingInserting(Component.text(adapter.getUser((Player)aud).getCachedData().getMetaData().getPrimaryGroup())))
+			.audiencePlaceholder("primary_group_name", (aud, queue, ctx) -> {
+					final String primaryGroup = adapter.getUser((Player)aud).getCachedData().getMetaData().getPrimaryGroup();
+					if (primaryGroup == null) {
+						return null;
+					}
+					return Tag.preProcessParsed(primaryGroup);
+			})
 			.audiencePlaceholder("inherits_group", (aud, queue, ctx) -> {
 				User user = adapter.getUser((Player)aud);
 				Group group = luckPerms.getGroupManager().getGroup(queue.popOr(() -> "you need to provide a group").value());
