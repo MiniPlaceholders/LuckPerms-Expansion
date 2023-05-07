@@ -1,0 +1,11 @@
+name: LuckPerms-Expansion
+version: '${version}'
+author: 4drian3d
+main: io.github.miniplaceholders.expansion.luckperms.paper.PaperPlugin
+api-version: '1.19'
+folia-supported: true
+dependencies:
+  - name: MiniPlaceholders
+    required: true
+  - name: LuckPerms
+    required: true
