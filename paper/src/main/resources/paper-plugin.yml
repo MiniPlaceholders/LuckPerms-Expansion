@@ -1,4 +1,4 @@
-name: LuckPerms-Expansion
+name: MiniPlaceholders-LuckPerms-Expansion
 version: '${version}'
 author: 4drian3d
 main: io.github.miniplaceholders.expansion.luckperms.paper.PaperPlugin

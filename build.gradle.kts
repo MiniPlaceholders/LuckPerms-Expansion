@@ -26,7 +26,7 @@ subprojects {
 
 tasks {
     shadowJar {
-        archiveFileName.set("LuckPerms-Expansion-${project.version}.jar")
+        archiveFileName.set("MiniPlaceholders-LuckPerms-Expansion-${project.version}.jar")
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     }
     build {
