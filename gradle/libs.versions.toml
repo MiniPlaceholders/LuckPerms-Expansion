@@ -12,7 +12,7 @@ pluginyml = "0.6.0"
 
 miniplaceholders = "2.2.0"
 luckperms = "5.4"
-adventure = "4.13.1"
+adventure = "4.14.0"
 
 [libraries]
 
