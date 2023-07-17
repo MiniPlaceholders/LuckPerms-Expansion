@@ -108,14 +108,13 @@ public record CommonExpansion(LuckPerms luckPerms) {
 
     public static @NotNull Component parsePossibleLegacy(final @Nullable String string) {
         if (string == null || string.isBlank()) return Component.empty();
-        if (string.indexOf('&') != 0) {
-            return miniMessage().deserialize(
-                    miniMessage().serialize(LEGACY_HEX_SERIALIZER.deserialize(string))
-                            .replace("\\<", "<")
-                            .replace("\\>", ">")
-            );
-        } else {
+        if (string.indexOf('&') == -1) {
             return miniMessage().deserialize(string);
         }
+        return miniMessage().deserialize(
+                miniMessage().serialize(LEGACY_HEX_SERIALIZER.deserialize(string))
+                        .replace("\\<", "<")
+                        .replace("\\>", ">")
+        );
     }
 }
