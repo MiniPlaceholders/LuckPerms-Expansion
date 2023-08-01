@@ -38,6 +38,15 @@ public record CommonExpansion(LuckPerms luckPerms) {
                     }
                     return Tag.inserting(parsePossibleLegacy(user.getCachedData().getMetaData().getSuffix()));
                 })
+                .audiencePlaceholder("get_meta", (aud, queue, ctx) -> {
+                    final User user = user(aud);
+                    if (user == null) {
+                        return null;
+                    }
+                    String meta = queue.popOr(() -> "you need to introduce a meta key").value();
+                    String result = user.getCachedData().getMetaData().getMetaValue(meta);
+                    return Tag.inserting(parsePossibleLegacy(result));
+                })
                 .audiencePlaceholder("has_permission", (aud, queue, ctx) -> {
                     final User user = user(aud);
                     if (user == null) {
