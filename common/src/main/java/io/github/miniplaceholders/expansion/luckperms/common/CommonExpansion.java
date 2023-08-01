@@ -5,6 +5,7 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.identity.Identity;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.Tag;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.model.group.Group;
@@ -37,6 +38,18 @@ public record CommonExpansion(LuckPerms luckPerms) {
                         return null;
                     }
                     return Tag.inserting(parsePossibleLegacy(user.getCachedData().getMetaData().getSuffix()));
+                })
+                .audiencePlaceholder("meta", (aud, queue, ctx) -> {
+                    final User user = user(aud);
+                    if (user == null) {
+                        return null;
+                    }
+                    String meta = queue.popOr(() -> "you need to introduce a meta key").value();
+                    String result = user.getCachedData().getMetaData().getMetaValue(meta);
+                    if (result == null) {
+                        return null;
+                    }
+                    return Tag.inserting(MiniMessage.miniMessage().deserialize(result));
                 })
                 .audiencePlaceholder("has_permission", (aud, queue, ctx) -> {
                     final User user = user(aud);
