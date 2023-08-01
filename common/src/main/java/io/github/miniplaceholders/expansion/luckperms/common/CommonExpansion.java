@@ -39,7 +39,7 @@ public record CommonExpansion(LuckPerms luckPerms) {
                     }
                     return Tag.inserting(parsePossibleLegacy(user.getCachedData().getMetaData().getSuffix()));
                 })
-                .audiencePlaceholder("get_meta", (aud, queue, ctx) -> {
+                .audiencePlaceholder("meta", (aud, queue, ctx) -> {
                     final User user = user(aud);
                     if (user == null) {
                         return null;
