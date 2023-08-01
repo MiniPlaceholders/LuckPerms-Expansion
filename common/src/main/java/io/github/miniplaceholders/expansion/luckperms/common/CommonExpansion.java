@@ -5,20 +5,16 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.identity.Identity;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.Tag;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.model.group.Group;
 import net.luckperms.api.model.user.User;
 import net.luckperms.api.util.Tristate;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
 import static io.github.miniplaceholders.api.utils.Components.*;
-import static io.github.miniplaceholders.api.utils.LegacyUtils.LEGACY_HEX_SERIALIZER;
-import static net.kyori.adventure.text.minimessage.MiniMessage.miniMessage;
+import static io.github.miniplaceholders.api.utils.LegacyUtils.*;
 
 public record CommonExpansion(LuckPerms luckPerms) {
     private static final Component UNDEFINED_COMPONENT = Component.text("undefined", NamedTextColor.GRAY);
@@ -30,14 +26,14 @@ public record CommonExpansion(LuckPerms luckPerms) {
                     if (user == null) {
                         return null;
                     }
-                    return Tag.inserting(parsePossibleLegacy(user.getCachedData().getMetaData().getPrefix()));
+                    return Tag.inserting(parsePossibleLegacy(user.getCachedData().getMetaData().getPrefix(), ctx));
                 })
                 .audiencePlaceholder("suffix", (aud, queue, ctx) -> {
                     final User user = user(aud);
                     if (user == null) {
                         return null;
                     }
-                    return Tag.inserting(parsePossibleLegacy(user.getCachedData().getMetaData().getSuffix()));
+                    return Tag.inserting(parsePossibleLegacy(user.getCachedData().getMetaData().getSuffix(), ctx));
                 })
                 .audiencePlaceholder("meta", (aud, queue, ctx) -> {
                     final User user = user(aud);
@@ -49,7 +45,7 @@ public record CommonExpansion(LuckPerms luckPerms) {
                     if (result == null) {
                         return null;
                     }
-                    return Tag.inserting(MiniMessage.miniMessage().deserialize(result));
+                    return Tag.inserting(ctx.deserialize(result));
                 })
                 .audiencePlaceholder("has_permission", (aud, queue, ctx) -> {
                     final User user = user(aud);
@@ -83,7 +79,7 @@ public record CommonExpansion(LuckPerms luckPerms) {
                         return null;
                     }
                     final Component groups = user.getInheritedGroups(user.getQueryOptions()).stream()
-                            .map(group -> parsePossibleLegacy(group.getDisplayName()))
+                            .map(group -> parsePossibleLegacy(group.getDisplayName(), ctx))
                             .collect(Component.toComponent(Component.text(", ")));
                     return Tag.selfClosingInserting(groups);
                 })
@@ -117,17 +113,5 @@ public record CommonExpansion(LuckPerms luckPerms) {
             return null;
         }
         return luckPerms.getUserManager().getUser(uuid);
-    }
-
-    public static @NotNull Component parsePossibleLegacy(final @Nullable String string) {
-        if (string == null || string.isBlank()) return Component.empty();
-        if (string.indexOf('&') == -1) {
-            return miniMessage().deserialize(string);
-        }
-        return miniMessage().deserialize(
-                miniMessage().serialize(LEGACY_HEX_SERIALIZER.deserialize(string))
-                        .replace("\\<", "<")
-                        .replace("\\>", ">")
-        );
     }
 }
