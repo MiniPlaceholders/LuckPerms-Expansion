@@ -11,9 +11,6 @@ dependencies {
 
 subprojects {
     apply<JavaPlugin>()
-    repositories {
-        maven("https://repo.papermc.io/repository/maven-public/")
-    }
 
     java.toolchain.languageVersion.set(JavaLanguageVersion.of(17))
 
@@ -28,6 +25,13 @@ subprojects {
 tasks {
     shadowJar {
         archiveFileName.set("MiniPlaceholders-LuckPerms-Expansion-${project.version}.jar")
+        archiveClassifier.set("")
+        doLast {
+            copy {
+                from(archiveFile)
+                into("${rootProject.projectDir}/build")
+            }
+        }
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     }
     build {

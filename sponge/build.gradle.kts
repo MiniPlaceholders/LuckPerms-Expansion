@@ -2,7 +2,7 @@ import org.spongepowered.gradle.plugin.config.PluginLoaders
 import org.spongepowered.plugin.metadata.model.PluginDependency
 
 plugins {
-    id("org.spongepowered.gradle.plugin") version "2.1.1"
+    id("org.spongepowered.gradle.plugin")
 }
 
 dependencies {
@@ -19,7 +19,7 @@ sponge {
         version("1.0")
     }
     plugin("miniplaceholders-luckperms-expansion") {
-        displayName("LuckPerms-Expansion")
+        displayName("MiniPlaceholders-LuckPerms-Expansion")
         entrypoint("io.github.miniplaceholders.expansion.luckperms.sponge.SpongePlugin")
         description(project.description)
         links {
