@@ -1,5 +1,5 @@
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
-rootProject.name = "Luckperms-Expansion"
+rootProject.name = "LuckPerms-Expansion"
 
 dependencyResolutionManagement {
     repositories {

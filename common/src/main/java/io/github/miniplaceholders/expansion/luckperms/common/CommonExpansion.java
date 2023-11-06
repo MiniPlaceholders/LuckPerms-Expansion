@@ -1,6 +1,7 @@
 package io.github.miniplaceholders.expansion.luckperms.common;
 
 import io.github.miniplaceholders.api.Expansion;
+import io.github.miniplaceholders.api.utils.TagsUtils;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.identity.Identity;
 import net.kyori.adventure.text.Component;
@@ -9,6 +10,7 @@ import net.kyori.adventure.text.minimessage.tag.Tag;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.model.group.Group;
 import net.luckperms.api.model.user.User;
+import net.luckperms.api.query.QueryOptions;
 import net.luckperms.api.util.Tristate;
 
 import java.util.UUID;
@@ -40,10 +42,11 @@ public record CommonExpansion(LuckPerms luckPerms) {
                     if (user == null) {
                         return null;
                     }
-                    String meta = queue.popOr(() -> "you need to introduce a meta key").value();
-                    String result = user.getCachedData().getMetaData().getMetaValue(meta);
+                    final String meta = queue.popOr(() -> "you need to introduce a meta key").value();
+                    final QueryOptions queryOptions = this.luckPerms.getContextManager().getQueryOptions(aud);
+                    final String result = user.getCachedData().getMetaData(queryOptions).getMetaValue(meta);
                     if (result == null) {
-                        return null;
+                        return TagsUtils.EMPTY_TAG;
                     }
                     return Tag.inserting(ctx.deserialize(result));
                 })
@@ -90,7 +93,7 @@ public record CommonExpansion(LuckPerms luckPerms) {
                     }
                     final String primaryGroup = user.getCachedData().getMetaData().getPrimaryGroup();
                     if (primaryGroup == null) {
-                        return null;
+                        return TagsUtils.EMPTY_TAG;
                     }
                     return Tag.preProcessParsed(primaryGroup);
                 })
