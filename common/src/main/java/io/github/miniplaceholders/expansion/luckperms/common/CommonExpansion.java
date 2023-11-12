@@ -13,6 +13,7 @@ import net.luckperms.api.model.user.User;
 import net.luckperms.api.query.QueryOptions;
 import net.luckperms.api.util.Tristate;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import static io.github.miniplaceholders.api.utils.Components.*;
@@ -43,20 +44,23 @@ public record CommonExpansion(LuckPerms luckPerms) {
                         return null;
                     }
                     final String meta = queue.popOr(() -> "you need to introduce a meta key").value();
-                    final QueryOptions queryOptions = this.luckPerms.getContextManager().getQueryOptions(aud);
-                    final String result = user.getCachedData().getMetaData(queryOptions).getMetaValue(meta);
+                    final Optional<QueryOptions> queryOptions = this.luckPerms.getContextManager().getQueryOptions(user);
+                    if (queryOptions.isEmpty()) {
+                        return null;
+                    }
+                    final String result = user.getCachedData().getMetaData(queryOptions.get()).getMetaValue(meta);
                     if (result == null) {
                         return TagsUtils.EMPTY_TAG;
                     }
-                    return Tag.inserting(ctx.deserialize(result));
+                    return Tag.preProcessParsed(result);
                 })
                 .audiencePlaceholder("has_permission", (aud, queue, ctx) -> {
                     final User user = user(aud);
                     if (user == null) {
                         return null;
                     }
-                    String permission = queue.popOr(() -> "you need to introduce an permission").value();
-                    Tristate result = user.getCachedData().getPermissionData().checkPermission(permission);
+                    final String permission = queue.popOr(() -> "you need to introduce an permission").value();
+                    final Tristate result = user.getCachedData().getPermissionData().checkPermission(permission);
                     return Tag.selfClosingInserting(result.asBoolean()
                             ? TRUE_COMPONENT
                             : FALSE_COMPONENT
@@ -69,7 +73,6 @@ public record CommonExpansion(LuckPerms luckPerms) {
                     }
                     final String permission = queue.popOr(() -> "you need to introduce an permission").value();
                     final Tristate result = user.getCachedData().getPermissionData().checkPermission(permission);
-
                     return Tag.selfClosingInserting(switch(result) {
                         case TRUE -> TRUE_COMPONENT;
                         case FALSE -> FALSE_COMPONENT;
@@ -102,7 +105,7 @@ public record CommonExpansion(LuckPerms luckPerms) {
                     if (user == null) {
                         return null;
                     }
-                    Group group = luckPerms.getGroupManager().getGroup(queue.popOr("you need to provide a group").value());
+                    final Group group = luckPerms.getGroupManager().getGroup(queue.popOr("you need to provide a group").value());
                     return Tag.selfClosingInserting(group != null && user.getInheritedGroups(user.getQueryOptions()).contains(group)
                             ? TRUE_COMPONENT
                             : FALSE_COMPONENT
