@@ -23,6 +23,6 @@ jobs:
         distribution: 'temurin'
         cache: 'gradle'
     - name: Build with Gradle
-      uses: gradle/gradle-build-action@87a9a15658c426a54dd469d4fc7dc1a73ca9d4a6
+      uses: gradle/gradle-build-action@32bab5b15a50e1b08ae1565fc18471b42da9665b
       with:
         arguments: build
