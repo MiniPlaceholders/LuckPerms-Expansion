@@ -42,4 +42,4 @@ shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow" }
 runvelocity = { id = "xyz.jpenilla.run-velocity", version.ref = "runtask" }
 runpaper = { id = "xyz.jpenilla.run-velocity", version.ref = "runtask" }
 pluginyml = { id = "net.minecrell.plugin-yml.bukkit", version.ref = "pluginyml" }
-idea-ext = { id = "org.jetbrains.gradle.plugin.idea-ext", version = "1.1.7" }
+idea-ext = { id = "org.jetbrains.gradle.plugin.idea-ext", version = "1.1.9" }
