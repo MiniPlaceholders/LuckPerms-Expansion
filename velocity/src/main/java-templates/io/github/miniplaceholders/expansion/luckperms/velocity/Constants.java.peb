@@ -1,6 +1,0 @@
-package io.github.miniplaceholders.expansion.luckperms.velocity;
-
-public class Constants {
-    private Constants() {}
-    static final String VERSION = "{{ version }}";
-}
