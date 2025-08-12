@@ -10,7 +10,7 @@ runtask = "2.2.0"
 
 miniplaceholders = "3.0.0-SNAPSHOT"
 luckperms = "5.4"
-adventure = "4.15.0"
+adventure = "4.24.0"
 
 [libraries]
 
