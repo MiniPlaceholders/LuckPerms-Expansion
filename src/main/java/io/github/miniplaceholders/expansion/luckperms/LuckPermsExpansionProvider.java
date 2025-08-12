@@ -8,7 +8,9 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.identity.Identity;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.Tag;
+import net.kyori.adventure.text.minimessage.tag.resolver.ArgumentQueue;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.group.Group;
@@ -45,14 +47,26 @@ public final class LuckPermsExpansionProvider implements ExpansionProvider {
                     if (user == null) {
                         return null;
                     }
-                    return Tag.inserting(parsePossibleLegacy(user.getCachedData().getMetaData().getPrefix(), ctx));
+                    final String prefix = user.getCachedData().getMetaData().getPrefix();
+                    
+                    if (parseString(queue)) {
+                        return Tag.preProcessParsed(MiniMessage.miniMessage().serialize(parsePossibleLegacy(prefix, ctx)));
+                    } else {
+                        return Tag.inserting(parsePossibleLegacy(prefix, ctx));
+                    }
                 })
                 .audiencePlaceholder("suffix", (aud, queue, ctx) -> {
                     final User user = user(aud, luckPerms);
                     if (user == null) {
                         return null;
                     }
-                    return Tag.inserting(parsePossibleLegacy(user.getCachedData().getMetaData().getSuffix(), ctx));
+                    final String suffix = user.getCachedData().getMetaData().getSuffix();
+                    
+                    if (parseString(queue)) {
+                        return Tag.preProcessParsed(MiniMessage.miniMessage().serialize(parsePossibleLegacy(suffix, ctx)));
+                    } else {
+                        return Tag.inserting(parsePossibleLegacy(suffix, ctx));
+                    }
                 })
                 .audiencePlaceholder("meta", (aud, queue, ctx) -> {
                     final User user = user(aud, luckPerms);
@@ -65,10 +79,15 @@ public final class LuckPermsExpansionProvider implements ExpansionProvider {
                         return null;
                     }
                     final String result = user.getCachedData().getMetaData(queryOptions.get()).getMetaValue(meta);
-                    if (result == null) {
-                        return Tags.EMPTY_TAG;
+                    
+                    if (parseString(queue)) {
+                        return Tag.preProcessParsed(result != null ? result : "");
+                    } else {
+                        if (result == null) {
+                            return Tags.EMPTY_TAG;
+                        }
+                        return Tag.preProcessParsed(result);
                     }
-                    return Tag.preProcessParsed(result);
                 })
                 .audiencePlaceholder("has_permission", (aud, queue, ctx) -> {
                     final User user = user(aud, luckPerms);
@@ -77,10 +96,16 @@ public final class LuckPermsExpansionProvider implements ExpansionProvider {
                     }
                     final String permission = queue.popOr(() -> "you need to introduce an permission").value();
                     final Tristate result = user.getCachedData().getPermissionData().checkPermission(permission);
-                    return Tag.selfClosingInserting(result.asBoolean()
-                            ? TRUE_COMPONENT
-                            : FALSE_COMPONENT
-                    );
+                    final boolean hasPermission = result.asBoolean();
+                    
+                    if (parseString(queue)) {
+                        return Tag.preProcessParsed(hasPermission ? "true" : "false");
+                    } else {
+                        return Tag.selfClosingInserting(hasPermission
+                                ? TRUE_COMPONENT
+                                : FALSE_COMPONENT
+                        );
+                    }
                 })
                 .audiencePlaceholder("check_permission", (aud, queue, ctx) -> {
                     final User user = user(aud, luckPerms);
@@ -89,21 +114,39 @@ public final class LuckPermsExpansionProvider implements ExpansionProvider {
                     }
                     final String permission = queue.popOr(() -> "you need to introduce an permission").value();
                     final Tristate result = user.getCachedData().getPermissionData().checkPermission(permission);
-                    return Tag.selfClosingInserting(switch (result) {
-                        case TRUE -> TRUE_COMPONENT;
-                        case FALSE -> FALSE_COMPONENT;
-                        case UNDEFINED -> UNDEFINED_COMPONENT;
-                    });
+                    
+                    if (parseString(queue)) {
+                        return Tag.preProcessParsed(switch (result) {
+                            case TRUE -> "true";
+                            case FALSE -> "false";
+                            case UNDEFINED -> "undefined";
+                        });
+                    } else {
+                        return Tag.selfClosingInserting(switch (result) {
+                            case TRUE -> TRUE_COMPONENT;
+                            case FALSE -> FALSE_COMPONENT;
+                            case UNDEFINED -> UNDEFINED_COMPONENT;
+                        });
+                    }
                 })
                 .audiencePlaceholder("inherited_groups", (aud, queue, ctx) -> {
                     final User user = user(aud, luckPerms);
                     if (user == null) {
                         return null;
                     }
-                    final Component groups = user.getInheritedGroups(user.getQueryOptions()).stream()
-                            .map(group -> parsePossibleLegacy(group.getDisplayName(), ctx))
-                            .collect(Component.toComponent(Component.text(", ")));
-                    return Tag.selfClosingInserting(groups);
+                    
+                    if (parseString(queue)) {
+                        final String groups = user.getInheritedGroups(user.getQueryOptions()).stream()
+                                .map(group -> MiniMessage.miniMessage().serialize(parsePossibleLegacy(group.getDisplayName())))
+                                .reduce((a, b) -> a + ", " + b)
+                                .orElse("");
+                        return Tag.preProcessParsed(groups);
+                    } else {
+                        final Component groups = user.getInheritedGroups(user.getQueryOptions()).stream()
+                                .map(group -> parsePossibleLegacy(group.getDisplayName(), ctx))
+                                .collect(Component.toComponent(Component.text(", ")));
+                        return Tag.selfClosingInserting(groups);
+                    }
                 })
                 .audiencePlaceholder("primary_group_name", (aud, queue, ctx) -> {
                     final User user = user(aud, luckPerms);
@@ -111,10 +154,15 @@ public final class LuckPermsExpansionProvider implements ExpansionProvider {
                         return null;
                     }
                     final String primaryGroup = user.getCachedData().getMetaData().getPrimaryGroup();
-                    if (primaryGroup == null) {
-                        return Tags.EMPTY_TAG;
+                    
+                    if (parseString(queue)) {
+                        return Tag.preProcessParsed(primaryGroup != null ? primaryGroup : "");
+                    } else {
+                        if (primaryGroup == null) {
+                            return Tags.EMPTY_TAG;
+                        }
+                        return Tag.preProcessParsed(primaryGroup);
                     }
-                    return Tag.preProcessParsed(primaryGroup);
                 })
                 .audiencePlaceholder("inherits_group", (aud, queue, ctx) -> {
                     final User user = user(aud, luckPerms);
@@ -122,15 +170,25 @@ public final class LuckPermsExpansionProvider implements ExpansionProvider {
                         return null;
                     }
                     final Group group = luckPerms.getGroupManager().getGroup(queue.popOr("you need to provide a group").value());
-                    return Tag.selfClosingInserting(group != null && user.getInheritedGroups(user.getQueryOptions()).contains(group)
-                            ? TRUE_COMPONENT
-                            : FALSE_COMPONENT
-                    );
+                    final boolean inheritsGroup = group != null && user.getInheritedGroups(user.getQueryOptions()).contains(group);
+                    
+                    if (parseString(queue)) {
+                        return Tag.preProcessParsed(inheritsGroup ? "true" : "false");
+                    } else {
+                        return Tag.selfClosingInserting(inheritsGroup
+                                ? TRUE_COMPONENT
+                                : FALSE_COMPONENT
+                        );
+                    }
                 }).build();
     }
 
     @Override
     public LoadRequirement loadRequirement() {
         return LoadRequirement.requiredComplement("luckperms", "LuckPerms");
+    }
+
+    private boolean parseString(ArgumentQueue queue) {
+        return queue.hasNext() && queue.pop().lowerValue().equals("string");
     }
 }
