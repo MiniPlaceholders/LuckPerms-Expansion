@@ -26,4 +26,4 @@ adventure-legacy = { group = "net.kyori", name = "adventure-text-serializer-lega
 blossom = { id = "net.kyori.blossom", version.ref = "blossom" }
 runvelocity = { id = "xyz.jpenilla.run-velocity", version.ref = "runtask" }
 runpaper = { id = "xyz.jpenilla.run-velocity", version.ref = "runtask" }
-idea-ext = { id = "org.jetbrains.gradle.plugin.idea-ext", version = "1.1.7" }
+idea-ext = { id = "org.jetbrains.gradle.plugin.idea-ext", version = "1.3" }
