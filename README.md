@@ -16,7 +16,3 @@ LuckPerms Expansion for MiniPlaceholders
 `<luckperms_inherits_group:group>` (true/false)
 
 `<luckperms_meta:meta-key>`
-
-## Downloads
-
-[![](https://raw.githubusercontent.com/Prospector/badges/master/modrinth-badge-72h-padded.png)](https://modrinth.com/plugin/luckperms-expansion)
