@@ -175,7 +175,8 @@ public final class LuckPermsExpansion {
     }
 
     private static boolean parseString(ArgumentQueue queue) {
-        return queue.hasNext() && queue.pop().lowerValue().equals("string");
+        String arg = queue.hasNext() ? queue.pop().lowerValue() : "";
+        return arg.equals("string") || arg.equals("s");
     }
 
     private static User user(final Audience audience, final LuckPerms luckPerms) {
