@@ -32,7 +32,7 @@ public final class LuckPermsExpansion {
         final LuckPerms luckPerms = LuckPermsProvider.get();
         return Expansion.builder("luckperms")
                 .author("MiniPlaceholders Contributors")
-                .version("2.0.0")
+                .version(Constants.VERSION)
                 .audiencePlaceholder("prefix", (aud, queue, ctx) -> {
                     final User user = user(aud, luckPerms);
                     if (user == null) {

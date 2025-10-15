@@ -1,0 +1,7 @@
+package io.github.miniplaceholders.expansion.luckperms;
+
+public final class Constants {
+    public static final String VERSION = "{{ version }}";
+
+    private Constants() {}
+}

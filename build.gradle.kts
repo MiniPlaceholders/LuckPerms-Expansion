@@ -1,5 +1,7 @@
 plugins {
     java
+    alias(libs.plugins.idea.ext)
+    alias(libs.plugins.blossom)
 }
 
 dependencies {
@@ -16,5 +18,15 @@ tasks {
     compileJava {
         options.encoding = Charsets.UTF_8.name()
         options.release.set(21)
+    }
+}
+
+sourceSets {
+    main {
+        blossom {
+            javaSources {
+                property("version", project.version.toString())
+            }
+        }
     }
 }
